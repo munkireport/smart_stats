@@ -150,11 +150,6 @@ class Smart_stats_model extends \Model {
         $this->rs['optional_admin_commands'] = '';
         $this->rs['optional_nvm_commands'] = '';
         $this->rs['max_data_transfer_size'] = ''; // End of new NVMe columns 
-
-        if ($serial)
-        {
-            $this->retrieve_record($serial);
-        }
         
         $this->serial = $serial;
     }
@@ -326,9 +321,12 @@ class Smart_stats_model extends \Model {
             'PowerOnHours' => 'power_on_hours_nvme',
             'MaximumDataTransferSize' => 'max_data_transfer_size', // End of NVMe translations  
             'Overall_Health' => 'overall_health');
-
-        // Delete previous entries
-        $this->deleteWhere('serial_number=?', $this->serial_number);
+        
+        // If we didn't specify in the config that we like history then
+        // We nuke any data we had with this computer's serial number
+        if (! conf('keep_smart_stats_historical')) {
+            $this->deleteWhere('serial_number=?', $this->serial_number);
+        }
 
         // Process incoming smart_stats.xml
         $parser = new CFPropertyList();
@@ -341,43 +339,49 @@ class Smart_stats_model extends \Model {
         // Get index ID
         $disk_id = (count($plist) -1 );
         
-     // Parse data for each disk
-     while ($disk_id > -1) {
+        // Parse data for each disk
+        while ($disk_id > -1) {
 
-        // Traverse the xml with translations
-        foreach ($translate as $search => $field) {
+            // Traverse the xml with translations
+            foreach ($translate as $search => $field) {
                 // If key is empty
-            if ( ! isset($plist[$disk_id][$search])) {
+                if ( ! isset($plist[$disk_id][$search])) {
                     $this->$field = null;
                 // If key has blank value, null it in the db
-            } else if ( $plist[$disk_id][$search] == "") {
-                $this->$field = null;
-                
-                // Key is set
-            } else {
-                if ($search == "Head_Flying_Hours" && stripos($plist[$disk_id][$search], 'h') !== false) {
+                } else if ( $plist[$disk_id][$search] == "") {
+                    $this->$field = null;
 
-                    $headhours = explode("h+",$plist[$disk_id][$search]);
-                    $this->$field = $headhours[0];
+                // Key is set
+                } else {
+                    if ($search == "Head_Flying_Hours" && stripos($plist[$disk_id][$search], 'h') !== false) {
+
+                        $headhours = explode("h+",$plist[$disk_id][$search]);
+                        $this->$field = $headhours[0];
 
                     // If key is a string save it to the object
-                } else if ( in_array($field, $strings)) {  
-                    $this->$field = $plist[$disk_id][$search];
+                    } else if ( in_array($field, $strings)) {  
+                        $this->$field = $plist[$disk_id][$search];
 
                     // If key is not a string save it to the object
-                } else  {  
-                    $this->$field = intval(preg_replace("/[^0-9]/", "", $plist[$disk_id][$search]));
+                    } else {  
+                        $this->$field = intval(preg_replace("/[^0-9]/", "", $plist[$disk_id][$search]));
+                    }
                 }
             }
+                            
+            // If we are to not keep historical data, do a selective delete
+            if (conf('keep_smart_stats_historical')) {
+                // Selectively delete display by matching HDD serial number
+                $this->deleteWhere('serial_number=? AND serial_number_hdd=?', array($this->serial_number, $this->serial_number_hdd));
+            }
+            
+            // Timestamp added by the server
+            $this->timestamp = time();
+
+            $this->id = '';
+            $this->create(); 
+            $disk_id--;
         }
-         
-         //timestamp added by the server
-         $this->timestamp = time();
-         
-         $this->id = '';
-         $this->create(); 
-         $disk_id--;
-     }
         
         $this->save();
     }

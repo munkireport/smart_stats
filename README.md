@@ -1,7 +1,33 @@
 SMART Stats module
 ================
 
+Collects data from a drive's SMART attributes.
 
+## Dependency
+
+smart_stats module requires smartctl, a part of smartmontools: [https://www.smartmontools.org/](https://www.smartmontools.org/)
+
+Download the latest version of smartmontools for macOS from the official repository here: [https://sourceforge.net/projects/smartmontools/files/latest/download?source=files](https://sourceforge.net/projects/smartmontools/files/latest/download?source=files)
+
+**Munki:**
+The downloaded smartmontools package has a name that conflicts with Munki's versioning. To avoid an error, import the downloaded DMG file directly instead of the PKG it contains.
+
+## Notes
+
+Starting with smartmontools 6.6 (released October of 2017), the SMART Stats module supports NVMe drives. NVMe drives will not fully appear in the SMART Stats listing, but all available data is in the client tab.
+
+
+Configuration
+------
+
+smart_stats module has one settings that can be managed by adding them to the server environment variables or the `.env` file.
+
+```
+keep_smart_stats_historical=TRUE
+```
+
+Table Schema
+------
 The following information is stored in the smart_stats table:
 
 
@@ -26,15 +52,3 @@ The following information is stored in the smart_stats table:
 
 All other table columns correspond with SMART attributes.  
 
-## Dependency
-
-smart_stats module requires smartctl, a part of smartmontools: [https://www.smartmontools.org/](https://www.smartmontools.org/)
-
-Download the latest version of smartmontools for macOS from the official repository here: [https://sourceforge.net/projects/smartmontools/files/latest/download?source=files](https://sourceforge.net/projects/smartmontools/files/latest/download?source=files)
-
-**Munki:**
-The downloaded smartmontools package has a name that conflicts with Munki's versioning. To avoid an error, import the downloaded DMG file directly instead of the PKG it contains.
-
-## Notes
-
-Starting with smartmontools 6.6 (released October of 2017), the SMART Stats module supports NVMe drives. NVMe drives will not fully appear in the SMART Stats listing, but all available data is in the client tab.
