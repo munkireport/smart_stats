@@ -27,7 +27,7 @@ $(document).on('appUpdate', function(e, lang) {
         if(data.unfixed != "0"){
             panel.append(' <a href="'+baseUrl+'CXS4JA0Q" class="btn btn-danger"><span class="bigger-150">'+data.unfixed+'</span><br>'+i18n.t('smart_stats.unfixed')+'</a>');
         } else {
-            panel.append(' <a href="'+baseUrl+'CXS4JA0Q" class="btn btn-danger"><span class="bigger-150 disabled">'+data.unfixed+'</span><br>'+i18n.t('smart_stats.unfixed')+'</a>');
+            panel.append(' <a href="'+baseUrl+'CXS4JA0Q" class="btn btn-danger disabled"><span class="bigger-150">'+data.unfixed+'</span><br>'+i18n.t('smart_stats.unfixed')+'</a>');
         }
         if(data.fixed != "0"){
             panel.append(' <a href="'+baseUrl+'CXS4LA0Q" class="btn btn-success"><span class="bigger-150">'+data.fixed+'</span><br>'+i18n.t('smart_stats.fixed')+'</a>');
