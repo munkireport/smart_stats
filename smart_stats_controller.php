@@ -24,6 +24,48 @@ class Smart_stats_controller extends Module_controller
 	}
     
     /**
+    * Get data for SSD Service Program widget
+    * https://www.apple.com/support/13-inch-macbook-pro-solid-state-drive-service-program/
+    * Research done by @eholtam/@poundbangbash
+    *
+    * @return void
+    * @author tuxudo
+    **/
+    public function ssd_service_check()
+    {
+        $obj = new View();
+        if (! $this->authorized()) {
+            $obj->view('json', array('msg' => 'Not authorized'));
+            return;
+        }
+  
+        $queryobj = new Smart_stats_model();
+        $sql = "SELECT COUNT(
+                            CASE WHEN `firmware_version` = 'CXS4JA0Q' AND (SUBSTRING(`serial_number_hdd`, 4, 1) = 'V' 
+                            OR SUBSTRING(`serial_number_hdd`, 4, 1) = 'W') 
+                            THEN 1 END) AS 'unfixed',
+
+
+                        COUNT(
+                            CASE WHEN `firmware_version` = 'CXS4LA0Q' AND (SUBSTRING(`serial_number_hdd`, 4, 1) = 'V'
+                            OR SUBSTRING(`serial_number_hdd`, 4, 1) = 'W')
+                            THEN 1 END) AS 'fixed',
+
+
+                        COUNT(
+                            CASE WHEN (`firmware_version` = 'CXS4JA0Q' OR `firmware_version` = 'CXS4LA0Q') AND SUBSTRING(`serial_number_hdd`, 4, 1) <> 'V'
+                            AND SUBSTRING(`serial_number_hdd`, 4, 1) <> 'W'
+                            THEN 1 END) AS 'not_affected'
+                        
+                        FROM smart_stats
+                        LEFT JOIN reportdata USING (serial_number)
+                        WHERE `model_number` = 'APPLE SSD SM0256L'
+						".get_machine_group_filter('AND');
+
+        $obj->view('json', array('msg' => current($queryobj->query($sql))));
+    }
+    
+    /**
      * Retrieve data in json format for client tab
      *
      * @return void
