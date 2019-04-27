@@ -336,11 +336,11 @@ class Smart_stats_model extends \Model {
         $plist = $parser->toArray();
         
         // Array of string for nulling with ""
-        $strings =  array('model_family','device_model','serial_number_hdd','lu_wwn_device_id','firmware_version','user_capacity','sector_size','rotation_rate','device_is','ata_version_is','sata_version_is','form_factor','smart_support_is','smart_is','serial_number','power_on_hours_and_msec','airflow_temperature_cel','temperature_celsius','overall_health','critical_warning', 'data_units_read', 'data_units_written', 'pci_vender_subsystem_id', 'ieee_oui_id', 'firmware_updates', 'optional_admin_commands', 'optional_nvm_commands', 'max_data_transfer_size');
+        $strings =  array('model_family','device_model','serial_number_hdd','lu_wwn_device_id','firmware_version','user_capacity','sector_size','rotation_rate','device_is','ata_version_is','sata_version_is','form_factor','smart_support_is','smart_is','serial_number','power_on_hours_and_msec','airflow_temperature_cel','temperature_celsius','overall_health','critical_warning', 'data_units_read', 'data_units_written', 'pci_vender_subsystem_id', 'ieee_oui_id', 'firmware_updates', 'optional_admin_commands', 'optional_nvm_commands', 'model_number', 'max_data_transfer_size');
 
         // Get index ID
         $disk_id = (count($plist) -1 );
-        
+
      // Parse data for each disk
      while ($disk_id > -1) {
 
@@ -370,15 +370,20 @@ class Smart_stats_model extends \Model {
                 }
             }
         }
-         
-         //timestamp added by the server
+
+         // Timestamp added by the server
          $this->timestamp = time();
-         
+
+         // Add model_number into blank device_model
+         if ($this->device_model == null){
+            $this->device_model = $this->model_number;
+         }
+
          $this->id = '';
          $this->create(); 
          $disk_id--;
      }
-        
+        // Save the drive data
         $this->save();
     }
 }
