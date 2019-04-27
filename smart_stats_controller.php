@@ -41,18 +41,18 @@ class Smart_stats_controller extends Module_controller
   
         $queryobj = new Smart_stats_model();
         $sql = "SELECT COUNT(
-                            CASE WHEN `firmware_version` = 'CXS4JA0Q' AND (SUBSTRING(`serial_number_hdd`, 4, 1) = 'V' 
-                            OR SUBSTRING(`serial_number_hdd`, 4, 1) = 'W') 
+                            CASE WHEN `firmware_version` = 'CXS4JA0Q' AND (SUBSTRING(`serial_number`, 4, 1) = 'V' 
+                            OR SUBSTRING(`serial_number`, 4, 1) = 'W') 
                             THEN 1 END) AS 'unfixed',
 
                         COUNT(
-                            CASE WHEN `firmware_version` = 'CXS4LA0Q' AND (SUBSTRING(`serial_number_hdd`, 4, 1) = 'V'
-                            OR SUBSTRING(`serial_number_hdd`, 4, 1) = 'W')
+                            CASE WHEN `firmware_version` = 'CXS4LA0Q' AND (SUBSTRING(`serial_number`, 4, 1) = 'V'
+                            OR SUBSTRING(`serial_number`, 4, 1) = 'W')
                             THEN 1 END) AS 'fixed',
 
                         COUNT(
-                            CASE WHEN (`firmware_version` = 'CXS4JA0Q' OR `firmware_version` = 'CXS4LA0Q') AND SUBSTRING(`serial_number_hdd`, 4, 1) <> 'V'
-                            AND SUBSTRING(`serial_number_hdd`, 4, 1) <> 'W'
+                            CASE WHEN (`firmware_version` = 'CXS4JA0Q' OR `firmware_version` = 'CXS4LA0Q') AND SUBSTRING(`serial_number`, 4, 1) <> 'V'
+                            AND SUBSTRING(`serial_number`, 4, 1) <> 'W'
                             THEN 1 END) AS 'not_affected'
                         
                         FROM smart_stats
