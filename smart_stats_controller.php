@@ -45,12 +45,10 @@ class Smart_stats_controller extends Module_controller
                             OR SUBSTRING(`serial_number_hdd`, 4, 1) = 'W') 
                             THEN 1 END) AS 'unfixed',
 
-
                         COUNT(
                             CASE WHEN `firmware_version` = 'CXS4LA0Q' AND (SUBSTRING(`serial_number_hdd`, 4, 1) = 'V'
                             OR SUBSTRING(`serial_number_hdd`, 4, 1) = 'W')
                             THEN 1 END) AS 'fixed',
-
 
                         COUNT(
                             CASE WHEN (`firmware_version` = 'CXS4JA0Q' OR `firmware_version` = 'CXS4LA0Q') AND SUBSTRING(`serial_number_hdd`, 4, 1) <> 'V'
@@ -60,7 +58,7 @@ class Smart_stats_controller extends Module_controller
                         FROM smart_stats
                         LEFT JOIN reportdata USING (serial_number)
                         WHERE `model_number` = 'APPLE SSD SM0256L'
-						".get_machine_group_filter('AND');
+                        ".get_machine_group_filter('AND');
 
         $obj->view('json', array('msg' => current($queryobj->query($sql))));
     }
