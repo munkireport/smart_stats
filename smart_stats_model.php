@@ -368,18 +368,6 @@ class Smart_stats_model extends \Model {
             
         }
 
-         // Timestamp added by the server
-         $this->timestamp = time();
-
-         // Add model_number into blank device_model
-         if ($this->device_model == null){
-            $this->device_model = $this->model_number;
-         }
-
-         $this->id = '';
-         $this->create(); 
-         $disk_id--;
-     }
         // Save the drive data
         $this->save();
     }
