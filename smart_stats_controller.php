@@ -11,9 +11,6 @@ class Smart_stats_controller extends Module_controller
 	function __construct()
 	{
 		$this->module_path = dirname(__FILE__);
-        
-		// Add local config
-		configAppendFile(__DIR__ . '/config.php', 'smart_stats');
 	}
 
 	/**
@@ -90,7 +87,7 @@ class Smart_stats_controller extends Module_controller
         // Add the temperature type to the object for the client tab
         $array_id = (count($smart_stats_tab) -1 );
         while ($array_id > -1) {
-             $smart_stats_tab[$array_id]->temperature_unit = conf('temperature_unit');
+             $smart_stats_tab[$array_id]->temperature_unit = env('TEMPERATURE_UNIT', "C");
              $array_id--;
         }
         
