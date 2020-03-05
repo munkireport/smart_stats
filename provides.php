@@ -9,6 +9,7 @@ return array(
     ),
     'widgets' => array(
         'smart_overall_health_test' => array('view' => 'smart_overall_health_test_widget'),
+        'ssd_service_program' => array('view' => 'ssd_service_program_widget'),
     ),
     'reports' => array(
         'smart_report' => array('view' => 'smart_report', 'i18n' => 'smart_stats.reporttitle'),
