@@ -1,11 +1,5 @@
 <?php $this->view('partials/head'); ?>
 
-<?php //Initialize models needed for the table
-new Machine_model;
-new Reportdata_model;
-new Smart_stats_model;
-?>
-
 <div class="container">
 
   <div class="row">
@@ -71,7 +65,7 @@ new Smart_stats_model;
 
         $('.table th').map(function(){
 
-            columnDefs.push({name: $(this).data('colname'), targets: col});
+            columnDefs.push({name: $(this).data('colname'), targets: col, render: $.fn.dataTable.render.text()});
 
             if($(this).data('sort')){
               mySort.push([col, $(this).data('sort')])
