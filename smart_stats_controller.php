@@ -11,9 +11,6 @@ class Smart_stats_controller extends Module_controller
 	function __construct()
 	{
 		$this->module_path = dirname(__FILE__);
-
-		// Add local config
-		configAppendFile(__DIR__ . '/config.php', 'smart_stats');
 	}
 
 	/**
