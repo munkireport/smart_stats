@@ -152,6 +152,9 @@ class Smart_stats_model extends \Model {
         $this->rs['max_data_transfer_size'] = ''; // End of new NVMe columns 
         
         $this->serial = $serial;
+
+        // Add local config
+        configAppendFile(__DIR__ . '/config.php');
     }
 
     public function getSmartStats()
