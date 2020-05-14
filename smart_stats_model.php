@@ -128,9 +128,6 @@ class Smart_stats_model extends \Model {
         $this->rs['overall_health'] = '';
         $this->rs['pci_vender_subsystem_id'] = ''; // Start of NVMe columns
         $this->rs['model_number'] = '';
-        $this->rs['temperature_nvme'] = 0;
-        $this->rs['power_on_hours_nvme'] = 0;
-        $this->rs['power_cycle_count_nvme'] = 0;
         $this->rs['critical_warning'] = '';  
         $this->rs['available_spare'] = 0;
         $this->rs['available_spare_threshold'] = 0;
@@ -324,24 +321,24 @@ class Smart_stats_model extends \Model {
             'PowerOnHours' => 'power_on_hours_nvme',
             'MaximumDataTransferSize' => 'max_data_transfer_size', // End of NVMe translations  
             'Overall_Health' => 'overall_health');
-        
+
         // If we didn't specify in the config that we like history then
         // We nuke any data we had with this computer's serial number
         if (! conf('keep_smart_stats_historical')) {
             $this->deleteWhere('serial_number=?', $this->serial_number);
         }
 
-        // Process incoming smart_stats.xml
+        // Process incoming smart_stats.plist
         $parser = new CFPropertyList();
         $parser->parse($data, CFPropertyList::FORMAT_XML);
         $plist = $parser->toArray();
-        
+
         // Array of string for nulling with ""
         $strings =  array('model_family','device_model','serial_number_hdd','lu_wwn_device_id','firmware_version','user_capacity','sector_size','rotation_rate','device_is','ata_version_is','sata_version_is','form_factor','smart_support_is','smart_is','serial_number','power_on_hours_and_msec','airflow_temperature_cel','temperature_celsius','overall_health','critical_warning', 'data_units_read', 'data_units_written', 'pci_vender_subsystem_id', 'ieee_oui_id', 'firmware_updates', 'optional_admin_commands', 'optional_nvm_commands', 'model_number', 'max_data_transfer_size');
 
         // Get index ID
         $disk_id = (count($plist) -1 );
-        
+
         // Parse data for each disk
         while ($disk_id > -1) {
 
