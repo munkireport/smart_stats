@@ -71,8 +71,10 @@ class Smart_stats_controller extends Module_controller
      **/
     public function get_client_tab_data($serial_number = '')
     {        
+        $obj = new View();
+
         if (! $this->authorized()) {
-            die('Authenticate first.'); // Todo: return json
+            $obj->view('json', array('msg' => 'Not authorized'));
             return;
         }
 
@@ -85,11 +87,10 @@ class Smart_stats_controller extends Module_controller
         // Add the temperature type to the object for the client tab
         $array_id = (count($smart_stats_tab) -1 );
         while ($array_id > -1) {
-             $smart_stats_tab[$array_id]->temperature_unit = conf('temperature_unit');
+             $smart_stats_tab[$array_id]->temperature_unit = env('TEMPERATURE_UNIT', "C");
              $array_id--;
         }
         
-        $obj = new View();
         $obj->view('json', array('msg' => current(array('msg' => $smart_stats_tab)))); 
     }
 
