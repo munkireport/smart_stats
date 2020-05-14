@@ -15,8 +15,8 @@ class SmartStatsDropExtraNvmeColumns extends Migration
             $table->dropColumn('temperature_nvme');
             $table->dropColumn('power_on_hours_nvme');
             $table->dropColumn('power_cycle_count_nvme');
-            $table->renameColumn('Unused_Reserve_NAND_Blk', 'unused_reserve_nand_blk');
-         
+            $table->dropColumn('Unused_Reserve_NAND_Blk');
+            $table->integer('unused_reserve_nand_blk')->nullable();
         });
      }
     
@@ -27,8 +27,8 @@ class SmartStatsDropExtraNvmeColumns extends Migration
             $table->integer('temperature_nvme')->nullable();
             $table->integer('power_on_hours_nvme')->nullable();
             $table->integer('power_cycle_count_nvme')->nullable();
-            $table->renameColumn('unused_reserve_nand_blk', 'Unused_Reserve_NAND_Blk');
-            
+            $table->dropColumn('unused_reserve_nand_blk');
+            $table->integer('Unused_Reserve_NAND_Blk')->nullable();
         });
     }
 }
