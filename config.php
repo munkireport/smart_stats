@@ -12,5 +12,5 @@ return [
     |
     */
 
-    'keep_smart_stats_historical' = env('KEEP_SMART_STATS_HISTORICAL', true),
+    'keep_smart_stats_historical' => env('KEEP_SMART_STATS_HISTORICAL', true),
 ];
